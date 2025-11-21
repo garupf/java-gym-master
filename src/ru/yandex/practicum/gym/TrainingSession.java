@@ -1,4 +1,4 @@
-package ru.yandex.practicum.gym;
+package org.example;
 
 public class TrainingSession {
 
@@ -34,3 +34,8 @@ public class TrainingSession {
         return timeOfDay;
     }
 }
+
+
+
+
+
