@@ -8,52 +8,55 @@ public class Timetable {
         this.timetable = new HashMap<>();
     }
 
-    private final Map<DayOfWeek, TreeMap<TimeOfDay, TrainingSession>> timetable;
+    private final Map<DayOfWeek, TreeMap<TimeOfDay, List<TrainingSession>>> timetable;
 
     public void addNewTrainingSession(TrainingSession trainingSession) {
         DayOfWeek dayOfWeek = trainingSession.getDayOfWeek();
         TimeOfDay timeOfDay = trainingSession.getTimeOfDay();
 
-        timetable.computeIfAbsent(dayOfWeek, k -> new TreeMap<>());
-        timetable.get(dayOfWeek).put(timeOfDay, trainingSession);
+        TreeMap<TimeOfDay, List<TrainingSession>> map = timetable.computeIfAbsent(dayOfWeek, k -> new TreeMap<>());
+        List<TrainingSession> trainingSessions = map.computeIfAbsent(timeOfDay, k -> new ArrayList<>());
+        trainingSessions.add(trainingSession);
     }
 
     public List<TrainingSession> getTrainingSessionsForDay(DayOfWeek dayOfWeek) {
-        if (dayOfWeek != null) {
-            TreeMap<TimeOfDay, TrainingSession> map = timetable.get(dayOfWeek);
-            if (map == null) {
-                return new ArrayList<>();
-            } else {
-                return new ArrayList<>(map.values());
-            }
+        if (dayOfWeek == null) return new ArrayList<>();
+
+        TreeMap<TimeOfDay, List<TrainingSession>> map = timetable.get(dayOfWeek);
+        if (map == null) return new ArrayList<>();
+
+        List<TrainingSession> result = new ArrayList<>();
+
+        for (List<TrainingSession> list : map.values()) {
+            result.addAll(list);
         }
-        return new ArrayList<>();
+
+        return result;
     }
 
     public List<TrainingSession>  getTrainingSessionsForDayAndTime(DayOfWeek dayOfWeek, TimeOfDay timeOfDay) {
-        TreeMap<TimeOfDay, TrainingSession> map = timetable.get(dayOfWeek);
+        TreeMap<TimeOfDay, List<TrainingSession>> map = timetable.get(dayOfWeek);
         if (map == null) {
             return new ArrayList<>();
         }
-        TrainingSession trainingSession = map.get(timeOfDay);
+        List<TrainingSession> trainingSession = map.get(timeOfDay);
         if (trainingSession == null) {
             return new ArrayList<>();
-        } else {
-            List<TrainingSession> trainingSessions = new ArrayList<>();
-            trainingSessions.add(trainingSession);
-            return trainingSessions;
         }
+        return trainingSession;
     }
 
     public List<Map.Entry<Coach, Integer>> getCountByCoaches() {
         Map<Coach, Integer> coachCount = new HashMap<>();
 
-        for (TreeMap<TimeOfDay, TrainingSession> dayMap : timetable.values()) {
+        for (TreeMap<TimeOfDay, List<TrainingSession>> dayMap : timetable.values()) {
             if (dayMap == null) continue;
 
-            for (TrainingSession session : dayMap.values()) {
-                Coach coach = session.getCoach();
-                coachCount.put(coach, coachCount.getOrDefault(coach, 0) + 1);
+            for (List<TrainingSession> session : dayMap.values()) {
+                for (TrainingSession trainingSession : session) {
+                    Coach coach = trainingSession.getCoach();
+                    coachCount.put(coach, coachCount.getOrDefault(coach, 0) + 1);
+                }
             }
         }
 
