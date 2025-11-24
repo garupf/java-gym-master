@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class TimetableTest {
 
     @Test
-    void testGetTrainingSessionsForDaySingleSession() {
+    void testGetTrainingSessionsForDaySingleSession(DayOfWeek dayOfWeek) {
         Timetable timetable = new Timetable();
 
         Group group = new Group("Акробатика для детей", Age.CHILD, 60);
@@ -53,7 +53,7 @@ public class TimetableTest {
 
         List<TrainingSession> mondaySessions = timetable.getTrainingSessionsForDay(DayOfWeek.MONDAY);
         assertEquals(1, mondaySessions.size());
-        List<TrainingSession> thursdaySessions = timetable.getTrainingSessionsForDay(DayOfWeek.THURSDAY);
+        List<TrainingSession> thursdaySessions = timetable.getTrainingSessionsForDay(DayOfWeek.TUESDAY);
         assertEquals(13, thursdaySessions.get(0).getTimeOfDay().getHours());
         assertEquals(0, thursdaySessions.get(0).getTimeOfDay().getMinutes());
         assertEquals(20, thursdaySessions.get(1).getTimeOfDay().getHours());
@@ -75,6 +75,7 @@ public class TimetableTest {
 
         List<TrainingSession> mondaySessions = timetable.getTrainingSessionsForDay(DayOfWeek.MONDAY);
         assertEquals(1, mondaySessions.size());
+        assertEquals(mondaySessions.get(0).getTimeOfDay(), singleTrainingSession.getTimeOfDay());
         assertEquals(13, mondaySessions.get(0).getTimeOfDay().getHours());
         assertEquals(0, mondaySessions.get(0).getTimeOfDay().getMinutes());
         assertTrue(timetable.getTrainingSessionsForDayAndTime(DayOfWeek.MONDAY, new TimeOfDay(14, 0)).isEmpty());
@@ -151,6 +152,26 @@ public class TimetableTest {
         List<Map.Entry<Coach, Integer>> list = timetable.getCountByCoaches();
 
         assertEquals(0, list.size());
+    }
+
+    @Test
+    void testGetTrainingSessionsForSameTime() {
+        Timetable timetable = new Timetable();
+        Coach coachPetrov = new Coach("Петров", "Андрей", "Викторович");
+        Coach coachIvanov = new Coach("Иванов", "Николай", "Егорович");
+        Group groupOfChildren = new Group("Акробатика для детей", Age.CHILD, 60);
+        Group groupOfAdults = new Group("Акробатика для взрослых", Age.CHILD, 60);
+
+        TrainingSession childSession = new TrainingSession(groupOfChildren, coachPetrov, DayOfWeek.MONDAY, new TimeOfDay(13, 0));
+        TrainingSession adultSession = new TrainingSession(groupOfAdults, coachIvanov, DayOfWeek.MONDAY, new TimeOfDay(13, 0));
+
+        timetable.addNewTrainingSession(childSession);
+        timetable.addNewTrainingSession(adultSession);
+
+        assertEquals(2, timetable.getTrainingSessionsForDay(DayOfWeek.MONDAY).size());
+        assertEquals(2,timetable.getTrainingSessionsForDayAndTime(DayOfWeek.MONDAY, new TimeOfDay(13, 0)).size());
+        assertEquals(0,timetable.getTrainingSessionsForDayAndTime(DayOfWeek.MONDAY, new TimeOfDay(14, 0)).size());
+
     }
 
 }
