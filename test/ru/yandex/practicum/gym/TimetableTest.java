@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class TimetableTest {
 
     @Test
-    void testGetTrainingSessionsForDaySingleSession(DayOfWeek dayOfWeek) {
+    void testGetTrainingSessionsForDaySingleSession() {
         Timetable timetable = new Timetable();
 
         Group group = new Group("Акробатика для детей", Age.CHILD, 60);
