@@ -34,32 +34,32 @@ public class TimetableTest {
         Coach coach = new Coach("Васильев", "Николай", "Сергеевич");
 
         Group groupAdult = new Group("Акробатика для взрослых", Age.ADULT, 90);
-        TrainingSession thursdayAdultTrainingSession = new TrainingSession(groupAdult, coach,
-                DayOfWeek.THURSDAY, new TimeOfDay(20, 0));
+        TrainingSession tuesdayAdultTrainingSession = new TrainingSession(groupAdult, coach,
+                DayOfWeek.TUESDAY, new TimeOfDay(20, 0));
 
-        timetable.addNewTrainingSession(thursdayAdultTrainingSession);
+        timetable.addNewTrainingSession(tuesdayAdultTrainingSession);
 
         Group groupChild = new Group("Акробатика для детей", Age.CHILD, 60);
         TrainingSession mondayChildTrainingSession = new TrainingSession(groupChild, coach,
                 DayOfWeek.MONDAY, new TimeOfDay(13, 0));
-        TrainingSession thursdayChildTrainingSession = new TrainingSession(groupChild, coach,
-                DayOfWeek.THURSDAY, new TimeOfDay(13, 0));
+        TrainingSession tuesdayChildTrainingSession = new TrainingSession(groupChild, coach,
+                DayOfWeek.TUESDAY, new TimeOfDay(13, 0));
         TrainingSession saturdayChildTrainingSession = new TrainingSession(groupChild, coach,
                 DayOfWeek.SATURDAY, new TimeOfDay(10, 0));
 
         timetable.addNewTrainingSession(mondayChildTrainingSession);
-        timetable.addNewTrainingSession(thursdayChildTrainingSession);
+        timetable.addNewTrainingSession(tuesdayChildTrainingSession);
         timetable.addNewTrainingSession(saturdayChildTrainingSession);
 
         List<TrainingSession> mondaySessions = timetable.getTrainingSessionsForDay(DayOfWeek.MONDAY);
         assertEquals(1, mondaySessions.size());
-        List<TrainingSession> thursdaySessions = timetable.getTrainingSessionsForDay(DayOfWeek.TUESDAY);
-        assertEquals(13, thursdaySessions.get(0).getTimeOfDay().getHours());
-        assertEquals(0, thursdaySessions.get(0).getTimeOfDay().getMinutes());
-        assertEquals(20, thursdaySessions.get(1).getTimeOfDay().getHours());
-        assertEquals(0, thursdaySessions.get(1).getTimeOfDay().getMinutes());
         List<TrainingSession> tuesdaySessions = timetable.getTrainingSessionsForDay(DayOfWeek.TUESDAY);
-        assertTrue(tuesdaySessions.isEmpty());
+        List<TrainingSession> thursdaySessions = timetable.getTrainingSessionsForDay(DayOfWeek.THURSDAY);
+        assertEquals(13, tuesdaySessions.get(0).getTimeOfDay().getHours());
+        assertEquals(0, tuesdaySessions.get(0).getTimeOfDay().getMinutes());
+        assertEquals(20, tuesdaySessions.get(1).getTimeOfDay().getHours());
+        assertEquals(0, tuesdaySessions.get(1).getTimeOfDay().getMinutes());
+        assertTrue(thursdaySessions.isEmpty());
     }
 
     @Test
