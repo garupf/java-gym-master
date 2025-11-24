@@ -1,6 +1,4 @@
-package ru.yandex.practicum.gym;
-
-import java.util.Objects;
+package org.example;
 
 public class TimeOfDay implements Comparable<TimeOfDay> {
 
@@ -16,21 +14,10 @@ public class TimeOfDay implements Comparable<TimeOfDay> {
 
     @Override
     public int compareTo(TimeOfDay o) {
-        if (hours != o.hours) return hours - o.hours;
-        return minutes - o.minutes;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        TimeOfDay timeOfDay = (TimeOfDay) o;
-        return hours == timeOfDay.hours && minutes == timeOfDay.minutes;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(hours, minutes);
+        if (this.hours != o.hours) {
+            return Integer.compare(this.hours, o.hours);
+        }
+        return Integer.compare(this.minutes, o.minutes);
     }
 
     public int getHours() {
